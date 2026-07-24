@@ -9,8 +9,19 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class KimiPromptBuilderTest {
     @Test
+    void systemPromptExplainsTheRealModelRouting() {
+        KimiPromptBuilder builder = new KimiPromptBuilder(1_000, 100);
+
+        List<KimiChatMessage> prompt = builder.build(List.of(), "你是什么模型？");
+
+        assertThat(prompt.getFirst().content())
+                .contains("qwen-plus", "kimi/kimi-k3")
+                .contains("不要编造");
+    }
+
+    @Test
     void dropsOldestHistoryUntilPromptFitsTokenBudget() {
-        KimiPromptBuilder builder = new KimiPromptBuilder(180, 40);
+        KimiPromptBuilder builder = new KimiPromptBuilder(300, 40);
         List<KimiChatMessage> history = List.of(
                 new KimiChatMessage("user", "旧".repeat(70)),
                 new KimiChatMessage("assistant", "中".repeat(35)),

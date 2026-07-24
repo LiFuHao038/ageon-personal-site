@@ -87,16 +87,16 @@ export function AuthScreen({ adminMode = false }: { adminMode?: boolean }) {
           <form onSubmit={submit} className="mt-8 grid gap-4">
             {signUp && !adminMode && (
               <div className="grid gap-4 sm:grid-cols-2">
-                <label className="grid gap-2 text-xs text-white/50"><span>显示名称</span><input required name="displayName" minLength={2} maxLength={40} className="auth-input" placeholder="你的名称" /></label>
-                <label className="grid gap-2 text-xs text-white/50"><span>用户名</span><input required name="username" minLength={3} maxLength={30} pattern="[A-Za-z0-9_-]+" className="auth-input" placeholder="developer_01" /></label>
+                <label className="grid gap-2 text-xs text-white/50"><span>显示名称</span><input required name="displayName" autoComplete="name" minLength={2} maxLength={40} className="auth-input" placeholder="你的名称" /></label>
+                <label className="grid gap-2 text-xs text-white/50"><span>用户名</span><input required name="username" autoComplete="username" minLength={3} maxLength={30} pattern="[A-Za-z0-9_-]+" className="auth-input" placeholder="developer_01" /></label>
               </div>
             )}
             {signUp && !adminMode ? (
-              <label className="grid gap-2 text-xs text-white/50"><span>邮箱</span><input required name="email" type="email" className="auth-input" placeholder="name@example.com" /></label>
+              <label className="grid gap-2 text-xs text-white/50"><span>邮箱</span><input required name="email" autoComplete="email" type="email" className="auth-input" placeholder="name@example.com" /></label>
             ) : (
-              <label className="grid gap-2 text-xs text-white/50"><span>{adminMode ? "管理员账号" : "用户名或邮箱"}</span><input required name="identifier" className="auth-input" placeholder={adminMode ? "ageon-admin" : "username / email"} /></label>
+              <label className="grid gap-2 text-xs text-white/50"><span>{adminMode ? "管理员账号" : "用户名或邮箱"}</span><input required name="identifier" autoComplete="username" className="auth-input" placeholder={adminMode ? "ageon-admin" : "username / email"} /></label>
             )}
-            <label className="grid gap-2 text-xs text-white/50"><span>密码</span><span className="relative"><input required name="password" minLength={8} type={showPassword ? "text" : "password"} className="auth-input w-full pr-12" placeholder="至少 8 位" /><button type="button" onClick={() => setShowPassword((value) => !value)} className="absolute right-0 top-0 grid h-12 w-12 place-items-center text-white/35 hover:text-white" aria-label="显示或隐藏密码">{showPassword ? <EyeOff size={17} /> : <Eye size={17} />}</button></span></label>
+            <label className="grid gap-2 text-xs text-white/50"><span>密码</span><span className="relative"><input required name="password" autoComplete={signUp && !adminMode ? "new-password" : "current-password"} minLength={8} type={showPassword ? "text" : "password"} className="auth-input w-full pr-12" placeholder="至少 8 位" /><button type="button" onClick={() => setShowPassword((value) => !value)} className="absolute right-0 top-0 grid h-12 w-12 place-items-center text-white/35 hover:text-white" aria-label="显示或隐藏密码">{showPassword ? <EyeOff size={17} /> : <Eye size={17} />}</button></span></label>
             {signUp && !adminMode && <label className="flex cursor-pointer items-center gap-3 py-1 text-xs text-white/45"><input type="checkbox" checked={acceptedTerms} onChange={(event) => setAcceptedTerms(event.target.checked)} className="accent-[#9ef01a]" /><span>我同意社区规则与内容审核机制</span></label>}
             {error && <div className="border border-[#ff6b5f]/40 bg-[#ff6b5f]/8 p-3 text-sm text-[#ffaaa3]">{error}</div>}
             <button disabled={submitting || (signUp && !adminMode && !acceptedTerms)} className="interactive mt-2 flex h-12 items-center justify-center gap-2 bg-[#9ef01a] font-semibold text-black disabled:cursor-not-allowed disabled:opacity-40">{adminMode && <LockKeyhole size={16} />}{submitting ? "处理中..." : adminMode ? "进入管理端" : signUp ? "提交注册申请" : "登录"}<ArrowRight size={16} /></button>

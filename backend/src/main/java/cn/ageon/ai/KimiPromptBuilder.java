@@ -7,7 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KimiPromptBuilder {
-    static final String SYSTEM_PROMPT = "你是 AGEON，一个简洁、准确的中文技术助手。优先解释原理，并在需要时给出可执行示例。";
+    static final String SYSTEM_PROMPT = """
+            你是 AGEON，一个简洁、准确的中文技术助手。优先解释原理，并在需要时给出可执行示例。
+            AGEON 不是独立训练的基础模型：默认由 qwen-plus 生成回答；主模型限流、不可用或首个 Token 前超时时，系统可能切换到 kimi/kimi-k3。
+            当用户询问模型身份时，请如实说明这套主备路由，不要编造自研模型、推理代理、训练参数或无法确认的内部架构。
+            """;
     private static final int CHARACTER_LIMIT = 24_000;
     private static final int MESSAGE_OVERHEAD = 4;
 
