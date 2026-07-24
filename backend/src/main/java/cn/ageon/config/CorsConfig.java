@@ -31,14 +31,35 @@ public class CorsConfig {
     }
 
     public static class CorsProperties {
-        private List<String> allowedOrigins = List.of("http://localhost:3000");
+        private static final String ENVIRONMENT_PREFIX = "AGEON_CORS_ALLOWED_ORIGINS=";
+
+        private List<String> allowedOrigins = List.of(
+                "http://localhost:3000",
+                "https://gbohmvqgmafa.cloud.sealos.io"
+        );
 
         public List<String> getAllowedOrigins() {
             return allowedOrigins;
         }
 
         public void setAllowedOrigins(List<String> allowedOrigins) {
-            this.allowedOrigins = allowedOrigins;
+            this.allowedOrigins = allowedOrigins.stream()
+                    .map(String::trim)
+                    .map(CorsProperties::removeEnvironmentPrefix)
+                    .map(CorsProperties::removeTrailingSlash)
+                    .filter(origin -> !origin.isBlank())
+                    .distinct()
+                    .toList();
+        }
+
+        private static String removeEnvironmentPrefix(String origin) {
+            return origin.startsWith(ENVIRONMENT_PREFIX)
+                    ? origin.substring(ENVIRONMENT_PREFIX.length())
+                    : origin;
+        }
+
+        private static String removeTrailingSlash(String origin) {
+            return origin.endsWith("/") ? origin.substring(0, origin.length() - 1) : origin;
         }
     }
 }
