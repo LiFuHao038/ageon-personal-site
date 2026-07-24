@@ -1,0 +1,83 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: ageon-api
+  profiles:
+    active: dev
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+ageon:
+  jwt:
+    secret: ${AGEON_JWT_SECRET}
+    expiration-hours: 24
+  admin:
+    username: ${AGEON_ADMIN_USERNAME}
+    email: ${AGEON_ADMIN_EMAIL}
+    password: ${AGEON_ADMIN_PASSWORD}
+  cors:
+    allowed-origins: ${AGEON_CORS_ALLOWED_ORIGINS:http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001}
+  ai:
+    api-key: ${AI_API_KEY:${DASHSCOPE_API_KEY:${KIMI_API_KEY:}}}
+    base-url: ${AI_BASE_URL:${KIMI_BASE_URL:https://dashscope.aliyuncs.com/compatible-mode/v1}}
+    primary-model: ${AI_PRIMARY_MODEL:qwen-plus}
+    fallback-enabled: ${AI_FALLBACK_ENABLED:true}
+    fallback-model: ${AI_FALLBACK_MODEL:${KIMI_MODEL:kimi/kimi-k3}}
+    connect-timeout-seconds: ${AI_CONNECT_TIMEOUT_SECONDS:${KIMI_CONNECT_TIMEOUT_SECONDS:10}}
+    response-timeout-seconds: ${AI_RESPONSE_TIMEOUT_SECONDS:${KIMI_RESPONSE_TIMEOUT_SECONDS:120}}
+    context-window-tokens: ${AI_CONTEXT_WINDOW_TOKENS:${KIMI_CONTEXT_WINDOW_TOKENS:128000}}
+    max-output-tokens: ${AI_MAX_OUTPUT_TOKENS:${KIMI_MAX_OUTPUT_TOKENS:2000}}
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:file:./data/ageon-dev;MODE=MySQL;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/h2/dev-community-migration.sql
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+---
+spring:
+  config:
+    activate:
+      on-profile: mysql
+  datasource:
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/ageon_site?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai}
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true

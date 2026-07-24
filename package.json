@@ -1,0 +1,33 @@
+{
+  "name": "lfh-personal-site",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node node_modules/next/dist/bin/next build",
+    "dev": "node node_modules/next/dist/bin/next dev",
+    "start": "node node_modules/next/dist/bin/next start",
+    "test": "node tests/site-contract.test.mjs && node tests/ai-api-contract.test.mjs && node tests/fetch-event-source.test.mjs && node tests/backend-contract.test.mjs && node tests/auth-contract.test.mjs && node tests/community-detail-contract.test.mjs && node tests/admin-contract.test.mjs && node tests/visual-contract.test.mjs && vitest run"
+  },
+  "dependencies": {
+    "@microsoft/fetch-event-source": "file:vendor/fetch-event-source",
+    "@react-three/fiber": "9.4.0",
+    "framer-motion": "12.42.2",
+    "lucide-react": "^0.454.0",
+    "next": "16.0.3",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "three": "0.181.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.9",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/three": "^0.181.0",
+    "postcss": "^8.5",
+    "tailwindcss": "^4.1.9",
+    "tw-animate-css": "1.3.3",
+    "typescript": "^5.1.0",
+    "vitest": "^3.2.4"
+  }
+}

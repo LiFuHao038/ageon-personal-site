@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:ageon-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+ageon:
+  jwt:
+    secret: test-only-jwt-secret-with-at-least-32-bytes
+  admin:
+    username: ageon-admin
+    email: admin@ageon.test
+    password: AgeonAdmin123!
