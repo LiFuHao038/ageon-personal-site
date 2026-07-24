@@ -30,6 +30,7 @@ import {
 import { ApiClientError } from "@/lib/api-client"
 import { toAiErrorMessage } from "@/lib/ai-errors"
 import { initialAiStreamRuntime, reduceAiStreamRuntime } from "@/lib/ai-stream-state"
+import { reactListKey } from "@/lib/react-list-key"
 
 type ChatMessage = {
   id: string
@@ -286,8 +287,8 @@ export function AiChat() {
               <div className="grid min-h-full place-items-center py-10 text-center">
                 <div className="max-w-md"><Bot size={28} className="mx-auto text-[#9ef01a]" /><h2 className="mt-5 text-2xl">从一个技术问题开始</h2><p className="mt-3 text-sm leading-7 text-white/45">回答由主备模型协同生成，会话记录仅对当前账号可见。</p><div className="mt-6 flex flex-wrap justify-center gap-2">{suggestions.map((suggestion) => <button key={suggestion} type="button" onClick={() => void sendQuestion(suggestion)} className="interactive border border-white/15 px-3 py-2 text-xs text-white/55">{suggestion}</button>)}</div></div>
               </div>
-            ) : messages.map((message) => (
-              <div key={message.id} className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+            ) : messages.map((message, index) => (
+              <div key={reactListKey("message", message.id, index)} className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
                 {message.role === "assistant" && <span className="grid h-8 w-8 shrink-0 place-items-center border border-white/15"><Bot size={15} /></span>}
                 <div className={`max-w-[84%] whitespace-pre-wrap border p-4 text-sm leading-7 md:max-w-[74%] ${message.role === "user" ? "border-[#9ef01a]/40 bg-[#9ef01a]/10" : message.status === "failed" ? "border-[#ff6b5f]/35 bg-[#ff6b5f]/6 text-[#ffd0cc]" : "border-white/15 bg-white/[0.025]"}`}>
                   {message.content || (message.status === "streaming" ? <span className="inline-flex gap-1" aria-label="正在生成"><i className="h-1.5 w-1.5 animate-pulse bg-[#9ef01a]" /><i className="h-1.5 w-1.5 animate-pulse bg-[#9ef01a] [animation-delay:140ms]" /><i className="h-1.5 w-1.5 animate-pulse bg-[#9ef01a] [animation-delay:280ms]" /></span> : "")}
@@ -326,7 +327,7 @@ function ConversationHistory(props: {
     <div className="border-b border-white/15 p-4"><button type="button" onClick={props.onCreate} disabled={props.generating} className="interactive flex h-11 w-full items-center justify-center gap-2 bg-[#9ef01a] text-sm font-semibold text-black disabled:opacity-40"><MessageSquarePlus size={16} /> 新建对话</button></div>
     <div className="flex items-center justify-between border-b border-white/10 px-4 py-3"><span className="mono text-[10px] text-white/38">CONVERSATIONS</span><History size={14} className="text-white/35" /></div>
     <div className="min-h-0 flex-1 overflow-y-auto">
-      {props.conversations.length === 0 ? <p className="p-5 text-sm leading-7 text-white/38">暂无历史对话</p> : props.conversations.map((conversation) => <div key={conversation.id} className={`group flex items-center border-b border-white/10 ${conversation.id === props.selectedId ? "bg-white/[0.055]" : ""}`}><button type="button" onClick={() => props.onSelect(conversation.id)} disabled={props.generating} className="min-w-0 flex-1 px-4 py-4 text-left disabled:cursor-not-allowed"><span className="block truncate text-sm">{conversation.title}</span><span className="mono mt-1 block text-[9px] text-white/30">{conversation.messageCount} MESSAGES</span></button><button type="button" onClick={() => props.onDelete(conversation.id)} disabled={props.generating} className="mr-3 grid h-8 w-8 shrink-0 place-items-center text-white/30 transition hover:text-[#ff8b82] disabled:opacity-20" aria-label={`删除对话 ${conversation.title}`}><Trash2 size={14} /></button></div>)}
+      {props.conversations.length === 0 ? <p className="p-5 text-sm leading-7 text-white/38">暂无历史对话</p> : props.conversations.map((conversation, index) => <div key={reactListKey("conversation", conversation.id, index)} className={`group flex items-center border-b border-white/10 ${conversation.id === props.selectedId ? "bg-white/[0.055]" : ""}`}><button type="button" onClick={() => props.onSelect(conversation.id)} disabled={props.generating} className="min-w-0 flex-1 px-4 py-4 text-left disabled:cursor-not-allowed"><span className="block truncate text-sm">{conversation.title}</span><span className="mono mt-1 block text-[9px] text-white/30">{conversation.messageCount} MESSAGES</span></button><button type="button" onClick={() => props.onDelete(conversation.id)} disabled={props.generating} className="mr-3 grid h-8 w-8 shrink-0 place-items-center text-white/30 transition hover:text-[#ff8b82] disabled:opacity-20" aria-label={`删除对话 ${conversation.title}`}><Trash2 size={14} /></button></div>)}
     </div>
     <div className="border-t border-white/15 p-4"><div className="flex items-end justify-between"><div><p className="mono text-[9px] text-white/35">今日剩余</p><p className="mt-1 text-2xl">{props.quota?.remaining ?? "--"}<span className="ml-1 text-sm text-white/35">/ {props.quota?.dailyLimit ?? 20}</span></p></div>{props.quota && <p className="mono text-[9px] text-white/28">{props.quota.date}</p>}</div><div className="mt-3 h-1 bg-white/10"><div className="h-full bg-[#9ef01a] transition-[width]" style={{ width: `${props.quota ? (props.quota.remaining / props.quota.dailyLimit) * 100 : 0}%` }} /></div></div>
   </div>
