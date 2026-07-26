@@ -38,3 +38,19 @@ assert.deepEqual(received, [
 ])
 
 console.log("fetch-event-source checks passed")
+
+let closeCount = 0
+for (let index = 0; index < 2; index += 1) {
+  await fetchEventSource("http://localhost/stream", {
+    fetch: async () => new Response(new ReadableStream({
+      start(controller) {
+        controller.enqueue(encoder.encode("event: done\ndata: {}\n\n"))
+        controller.close()
+      },
+    }), { status: 200, headers: { "Content-Type": "text/event-stream" } }),
+    onclose() {
+      closeCount += 1
+    },
+  })
+}
+assert.equal(closeCount, 2, "two sequential streams should close independently")

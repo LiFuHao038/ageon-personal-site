@@ -90,6 +90,7 @@ export async function streamAiMessage(options: {
   onDone: (done: AiStreamDone) => void
   onError: (error: AiStreamError) => void
 }) {
+  let terminalEventReceived = false
   await fetchEventSource(`${API_BASE_URL}/api/v1/ai/conversations/${options.conversationId}/messages/stream`, {
     method: "POST",
     headers: {
@@ -119,9 +120,23 @@ export async function streamAiMessage(options: {
       if (message.event === "message") options.onMessage(JSON.parse(message.data).delta)
       if (message.event === "model_status") options.onModelStatus(JSON.parse(message.data))
       if (message.event === "quota") options.onQuota(JSON.parse(message.data))
-      if (message.event === "done") options.onDone(JSON.parse(message.data))
+      if (message.event === "done") {
+        terminalEventReceived = true
+        options.onDone(JSON.parse(message.data))
+      }
       if (message.event === "error") {
         const payload = JSON.parse(message.data) as AiStreamError
+        terminalEventReceived = true
+        options.onError(payload)
+        throw new AiStreamEventError(payload)
+      }
+    },
+    onclose() {
+      if (!terminalEventReceived) {
+        const payload = {
+          code: "AI_STREAM_INTERRUPTED",
+          message: "AI 回答连接意外中断，请重新发送",
+        }
         options.onError(payload)
         throw new AiStreamEventError(payload)
       }

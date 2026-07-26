@@ -199,6 +199,36 @@ class AiStreamControllerTest {
         mockMvc.perform(asyncDispatch(first)).andExpect(status().isOk());
     }
 
+    @Test
+    void allowsTwoSequentialStreamsForSameUser() throws Exception {
+        doAnswer(invocation -> {
+            KimiDeltaHandler handler = invocation.getArgument(2);
+            handler.onDelta("done");
+            return null;
+        }).when(modelGateway).stream(
+                any(List.class), any(AiModelStatusHandler.class), any(KimiDeltaHandler.class)
+        );
+        long conversationId = createConversation(firstToken);
+
+        MvcResult first = stream(conversationId, firstToken, "first")
+                .andExpect(request().asyncStarted())
+                .andReturn();
+        mockMvc.perform(asyncDispatch(first))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("event:done")));
+
+        MvcResult second = stream(conversationId, firstToken, "second")
+                .andExpect(request().asyncStarted())
+                .andReturn();
+        mockMvc.perform(asyncDispatch(second))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("event:done")));
+
+        AiConversation conversation = conversationRepository
+                .findOwnedWithMessages(conversationId, firstUser.getId()).orElseThrow();
+        assertThat(conversation.getMessages()).hasSize(4);
+    }
+
     private org.springframework.test.web.servlet.ResultActions stream(
             long conversationId, String token, String content
     ) throws Exception {

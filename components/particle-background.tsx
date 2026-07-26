@@ -87,10 +87,11 @@ export function ParticleBackground({ variant = "public" }: { variant?: "public" 
     const target = new THREE.Vector2()
     let animationFrame = 0
     let active = !document.hidden
+    let contextLost = false
     const clock = new THREE.Clock()
 
     const render = () => {
-      if (!active) return
+      if (!active || contextLost) return
       target.lerp(pointer, 0.035)
       points.rotation.y += reducedMotion || variant === "static" ? 0 : 0.0014
       points.rotation.z = target.x * 0.08
@@ -104,17 +105,32 @@ export function ParticleBackground({ variant = "public" }: { variant?: "public" 
     const onPointerMove = (event: PointerEvent) => { pointer.set(event.clientX / window.innerWidth - 0.5, event.clientY / window.innerHeight - 0.5) }
     const onResize = () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); renderer.setSize(window.innerWidth, window.innerHeight) }
     const onVisibilityChange = () => { active = !document.hidden; if (active && !animationFrame && !reducedMotion && variant !== "static") render(); if (!active) { cancelAnimationFrame(animationFrame); animationFrame = 0 } }
+    const onContextLost = (event: Event) => {
+      event.preventDefault()
+      contextLost = true
+      cancelAnimationFrame(animationFrame)
+      animationFrame = 0
+    }
+    const onContextRestored = () => {
+      contextLost = false
+      if (active) render()
+    }
     window.addEventListener("pointermove", onPointerMove, { passive: true })
     window.addEventListener("resize", onResize)
     document.addEventListener("visibilitychange", onVisibilityChange)
+    renderer.domElement.addEventListener("webglcontextlost", onContextLost)
+    renderer.domElement.addEventListener("webglcontextrestored", onContextRestored)
 
     return () => {
       cancelAnimationFrame(animationFrame)
       window.removeEventListener("pointermove", onPointerMove)
       window.removeEventListener("resize", onResize)
       document.removeEventListener("visibilitychange", onVisibilityChange)
+      renderer.domElement.removeEventListener("webglcontextlost", onContextLost)
+      renderer.domElement.removeEventListener("webglcontextrestored", onContextRestored)
       geometry.dispose()
       material.dispose()
+      renderer.renderLists.dispose()
       renderer.dispose()
       renderer.domElement.remove()
     }

@@ -17,4 +17,7 @@ for (const name of [
 ]) assert.match(api, new RegExp(name))
 const dashboard = read("components/admin-dashboard.tsx")
 for (const label of ["用户审核", "问题管理", "回复管理", "管理员回复"]) assert.match(dashboard, new RegExp(label))
+for (const feedback of ["用户已审核通过", "用户已拒绝"]) assert.match(dashboard, new RegExp(feedback))
+assert.match(dashboard, /disabled=\{item\.status === "APPROVED"\}/)
+assert.match(dashboard, /disabled=\{item\.status === "REJECTED"\}/)
 console.log("admin contract checks passed")
