@@ -10,6 +10,7 @@ function read(relativePath) {
   return readFileSync(filePath, "utf8")
 }
 
+// 后端 community 包暂时保留（数据与迁移不删），仅校验后端契约；前端社区入口与客户端已移除。
 const controller = read("backend/src/main/java/cn/ageon/community/CommunityQuestionController.java")
 for (const route of [
   '@RequestMapping("/api/v1/community")',
@@ -23,14 +24,31 @@ for (const route of [
   assert.match(controller, new RegExp(route.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `controller should expose ${route}`)
 }
 
+// 新增的秋招投递追踪后端：只做轻量断言，不与实现细节耦合。
+const applyController = read("backend/src/main/java/cn/ageon/apply/ApplicationController.java")
+assert.match(applyController, /@RequestMapping\("\/api\/v1\/applications"\)/, "apply controller should expose /api/v1/applications")
+
+const applyStatus = read("backend/src/main/java/cn/ageon/apply/ApplicationStatus.java")
+assert.match(applyStatus, /\bOFFER\b/, "application status enum should include OFFER")
+assert.match(applyStatus, /\bREJECTED\b/, "application status enum should include REJECTED")
+
 const response = read("backend/src/main/java/cn/ageon/community/dto/QuestionResponse.java")
 for (const field of ["title", "detail", "tag", "author", "replies", "status", "time", "likes", "replyItems"]) {
   assert.match(response, new RegExp(`\\b${field}\\b`), `question response should include ${field}`)
 }
 
-const frontendClient = `${read("lib/community-api.ts")}\n${read("lib/api-client.ts")}`
-for (const api of ["listCommunityQuestions", "createCommunityQuestion", "createCommunityReply", "likeCommunityQuestion"]) {
-  assert.match(frontendClient, new RegExp(`export function ${api}`), `frontend API client should expose ${api}`)
+const frontendClient = `${read("lib/application-api.ts")}\n${read("lib/api-client.ts")}`
+for (const api of [
+  "listApplications",
+  "createApplication",
+  "updateApplication",
+  "deleteApplication",
+  "changeApplicationStatus",
+  "previewApplicationSource",
+  "getApplicationStatusMeta",
+  "getApplicationStats",
+]) {
+  assert.match(frontendClient, new RegExp(`export (async )?function ${api}`), `application API client should expose ${api}`)
 }
 assert.match(frontendClient, /NEXT_PUBLIC_API_BASE_URL/, "frontend API client should allow API base URL configuration")
 

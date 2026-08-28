@@ -7,8 +7,8 @@ export function SiteFooter() {
       <div className="site-shell flex flex-col gap-8 py-10 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="eyebrow">NEXT STEP</p>
-          <Link href="/community" className="mt-3 inline-flex items-center gap-3 text-2xl hover:text-[#9ef01a]">
-            留下一个问题 <ArrowUpRight size={22} />
+          <Link href="/apply" className="mt-3 inline-flex items-center gap-3 text-2xl hover:text-[#9ef01a]">
+            开始投递追踪 <ArrowUpRight size={22} />
           </Link>
         </div>
         <div className="mono flex flex-wrap gap-x-6 gap-y-2 text-[11px] text-white/45">

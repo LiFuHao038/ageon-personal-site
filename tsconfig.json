@@ -37,16 +37,6 @@
   ],
   "exclude": [
     "node_modules",
-    "components/ui",
-    "components/about.tsx",
-    "components/custom-cursor.tsx",
-    "components/footer.tsx",
-    "components/section-blend.tsx",
-    "components/smooth-scroll.tsx",
-    "components/tech-marquee.tsx",
-    "components/theme-provider.tsx",
-    "components/works.tsx",
-    "hooks/use-toast.ts",
-    "lib/utils.ts"
+    "components/works.tsx"
   ]
 }

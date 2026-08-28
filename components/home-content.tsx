@@ -1,9 +1,12 @@
 import Link from "next/link"
-import { ArrowRight, ArrowUpRight, Bot, BrainCircuit, Code2, MessagesSquare } from "lucide-react"
+import { ArrowRight, ArrowUpRight, Bot, Code2, Target } from "lucide-react"
 import { projects, siteNav } from "@/lib/site-data"
 import { ProfileFolders } from "@/components/profile-folders"
 
-const routeIcons = [Code2, MessagesSquare, Bot, BrainCircuit]
+const routeIcons = [Code2, Target, Bot]
+
+const projectCardClass =
+  "group grid gap-5 border-b border-white/15 py-7 md:grid-cols-[70px_1fr_auto] md:items-center md:py-10"
 
 export function HomeContent() {
   return (
@@ -26,24 +29,36 @@ export function HomeContent() {
           </div>
 
           <div className="border-t border-white/15">
-            {projects.map((project, index) => (
-              <article key={project.title} className="group grid gap-5 border-b border-white/15 py-7 md:grid-cols-[70px_1fr_auto] md:items-center md:py-10">
-                <span className="mono text-xs text-white/35">0{index + 1}</span>
-                <div>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <h3 className="text-2xl transition-transform group-hover:translate-x-2 md:text-4xl">{project.title}</h3>
-                    <span className="mono border border-white/15 px-2 py-1 text-[9px] text-white/45">{project.status}</span>
+            {projects.map((project, index) => {
+              const href = project.repoUrl || project.demoUrl || ""
+              const cardBody = (
+                <>
+                  <span className="mono text-xs text-white/35">0{index + 1}</span>
+                  <div>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <h3 className="text-2xl transition-transform group-hover:translate-x-2 md:text-4xl">{project.title}</h3>
+                      <span className="mono border border-white/15 px-2 py-1 text-[9px] text-white/45">{project.status}</span>
+                    </div>
+                    <p className="mt-3 max-w-xl text-sm leading-7 text-white/50">{project.description}</p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {project.tags.map((tag) => <span key={tag} className="mono text-[10px] text-white/38">#{tag}</span>)}
+                    </div>
                   </div>
-                  <p className="mt-3 max-w-xl text-sm leading-7 text-white/50">{project.description}</p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {project.tags.map((tag) => <span key={tag} className="mono text-[10px] text-white/38">#{tag}</span>)}
+                  <div className="grid h-11 w-11 place-items-center border border-white/15 group-hover:border-[#9ef01a] group-hover:text-[#9ef01a]">
+                    <ArrowUpRight size={18} />
                   </div>
-                </div>
-                <div className="grid h-11 w-11 place-items-center border border-white/15 group-hover:border-[#9ef01a] group-hover:text-[#9ef01a]">
-                  <ArrowUpRight size={18} />
-                </div>
-              </article>
-            ))}
+                </>
+              )
+              return href ? (
+                <Link key={project.title} href={href} target="_blank" rel="noreferrer" className={projectCardClass}>
+                  {cardBody}
+                </Link>
+              ) : (
+                <article key={project.title} className={projectCardClass}>
+                  {cardBody}
+                </article>
+              )
+            })}
           </div>
         </div>
       </section>
@@ -51,7 +66,7 @@ export function HomeContent() {
       <section className="py-20 md:py-28">
         <div className="site-shell">
           <p className="eyebrow">03 / ENTER</p>
-          <div className="mt-8 grid border-l border-t border-white/15 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid border-l border-t border-white/15 md:grid-cols-3">
             {siteNav.map((item, index) => {
               const Icon = routeIcons[index]
               return (

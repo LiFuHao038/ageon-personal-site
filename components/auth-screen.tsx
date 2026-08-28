@@ -38,7 +38,7 @@ export function AuthScreen({ adminMode = false }: { adminMode?: boolean }) {
           String(data.get("identifier") ?? "").trim(),
           String(data.get("password") ?? ""),
         )
-        router.push(response.user.role === "ADMIN" ? "/admin" : "/community")
+        router.push(response.user.role === "ADMIN" ? "/admin" : "/apply")
       }
     } catch (requestError) {
       setError(requestError instanceof ApiClientError ? requestError.message : "服务暂时不可用，请稍后重试")
@@ -54,7 +54,7 @@ export function AuthScreen({ adminMode = false }: { adminMode?: boolean }) {
           <span className="mx-auto grid h-14 w-14 place-items-center border border-[#9ef01a] text-[#9ef01a]"><Check /></span>
           <p className="eyebrow mt-7">REGISTRATION RECEIVED</p>
           <h1 className="mt-4 text-3xl md:text-5xl">等待管理员审核</h1>
-          <p className="mx-auto mt-5 max-w-md text-sm leading-7 text-white/55">账号已创建。审核通过后即可登录、发布问题和参与回复。</p>
+          <p className="mx-auto mt-5 max-w-md text-sm leading-7 text-white/55">账号已创建。审核通过后即可登录并使用投递追踪与 AI 问答。</p>
           <button type="button" onClick={() => { setPendingReview(false); setSignUp(false) }} className="interactive mt-8 inline-flex h-11 items-center gap-2 border border-white/20 px-4 text-sm">返回登录 <ArrowRight size={16} /></button>
         </section>
       </main>
@@ -74,7 +74,7 @@ export function AuthScreen({ adminMode = false }: { adminMode?: boolean }) {
             <div>
               <span className="grid h-12 w-12 place-items-center border border-[#9ef01a] text-[#9ef01a]">{adminMode ? <ShieldCheck /> : <UserRound />}</span>
               <p className="mono mt-6 text-[10px] tracking-[.15em] text-[#9ef01a]">{adminMode ? "ADMIN CONSOLE" : "BUILD / LEARN / SHARE"}</p>
-              <h2 className="mt-3 max-w-md text-3xl leading-tight md:text-5xl">{adminMode ? "审核内容，维护社区秩序。" : "进入属于开发者的交流空间。"}</h2>
+              <h2 className="mt-3 max-w-md text-3xl leading-tight md:text-5xl">{adminMode ? "审核内容，维护社区秩序。" : "追踪每一次投递，沉淀每一场面试。"}</h2>
             </div>
           </div>
         </div>

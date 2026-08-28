@@ -1,14 +1,13 @@
 # AGEON Personal Site
 
-个人技术博客与问答社区，前端使用 Next.js 16，后端使用 Spring Boot 3、JWT、JPA 和 H2/MySQL。
+个人技术站：秋招投递追踪 + AI 问答。前端使用 Next.js 16，后端使用 Spring Boot 3、JWT、JPA 和 H2/MySQL。
 
 ## 当前页面
 
-- `/`：粒子背景、个人 FOLDERS、项目和功能入口。
-- `/community`：公开问题列表；审核用户可提问、回复和点赞。
-- `/community/{id}`：问题详情与完整回复。
+- `/`：名片首页（粒子背景、个人 FOLDERS、项目作品和功能入口）。
+- `/apply`：秋招投递追踪（状态机时间线、截止提醒、看板/表格双视图）。
+- `/apply/stats`：投递统计看板（漏斗、阶段耗时、分组统计、周趋势、临期提醒）。
 - `/ai`：已接入千问主模型、Kimi 备用模型、SSE 流式问答、会话历史和每日额度。
-- `/interview`：计算机网络题库与模拟面试。
 - `/auth`：普通用户注册与登录，注册后等待管理员审核。
 - `/admin/login`、`/admin`：管理员登录与审核控制台。
 
@@ -48,7 +47,7 @@ $env:NEXT_PUBLIC_API_BASE_URL="http://localhost:8080"
 pnpm dev
 ```
 
-默认前端为 `http://localhost:3000`，后端为 `http://localhost:8080`。
+默认前端为 `http://localhost:3000`，后端为 `http://localhost:8080`。部署时可设置 `$env:NEXT_PUBLIC_SITE_URL`（可选）作为站点对外地址，用于 `metadataBase`、Open Graph、`sitemap.xml` 与 `robots.txt`。
 
 ## 配置
 

@@ -3,7 +3,7 @@
 import Link from "next/link"
 import dynamic from "next/dynamic"
 import { motion } from "framer-motion"
-import { ArrowDown, ArrowUpRight, MessageSquareText } from "lucide-react"
+import { ArrowDown, ArrowUpRight, Bot } from "lucide-react"
 
 const SentientSphere = dynamic(() => import("./sentient-sphere").then((mod) => mod.SentientSphere), {
   ssr: false,
@@ -63,11 +63,11 @@ export function Hero() {
         >
           <div className="max-w-md">
             <div className="mt-6 flex flex-wrap gap-2">
-              <Link href="/ai" className="interactive inline-flex h-12 items-center gap-2 border border-[#9ef01a] bg-[#9ef01a] px-4 text-sm font-semibold text-black">
-                体验 AI 问答 <ArrowUpRight size={16} />
+              <Link href="/apply" className="interactive inline-flex h-12 items-center gap-2 border border-[#9ef01a] bg-[#9ef01a] px-4 text-sm font-semibold text-black">
+                开始投递追踪 <ArrowUpRight size={16} />
               </Link>
-              <Link href="/community" className="interactive inline-flex h-12 items-center gap-2 border border-white/20 bg-black/30 px-4 text-sm">
-                向我提问 <MessageSquareText size={16} />
+              <Link href="/ai" className="interactive inline-flex h-12 items-center gap-2 border border-white/20 bg-black/30 px-4 text-sm">
+                体验 AI 问答 <Bot size={16} />
               </Link>
             </div>
           </div>

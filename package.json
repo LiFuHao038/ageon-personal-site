@@ -6,7 +6,7 @@
     "build": "node node_modules/next/dist/bin/next build",
     "dev": "node node_modules/next/dist/bin/next dev",
     "start": "node node_modules/next/dist/bin/next start",
-    "test": "node tests/site-contract.test.mjs && node tests/ai-api-contract.test.mjs && node tests/fetch-event-source.test.mjs && node tests/backend-contract.test.mjs && node tests/auth-contract.test.mjs && node tests/community-detail-contract.test.mjs && node tests/admin-contract.test.mjs && node tests/visual-contract.test.mjs && vitest run"
+    "test": "node tests/site-contract.test.mjs && node tests/ai-api-contract.test.mjs && node tests/fetch-event-source.test.mjs && node tests/backend-contract.test.mjs && node tests/auth-contract.test.mjs && node tests/admin-contract.test.mjs && node tests/visual-contract.test.mjs && vitest run"
   },
   "dependencies": {
     "@microsoft/fetch-event-source": "file:vendor/fetch-event-source",

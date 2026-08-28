@@ -5,8 +5,7 @@ import { Check, MessageSquareReply, RefreshCw, ShieldCheck, Trash2, UserCheck, X
 import { useAuth } from "@/components/auth-provider"
 import { ApiClientError } from "@/lib/api-client"
 import type { AccountStatus, CurrentUser } from "@/lib/auth-api"
-import type { CommunityQuestionResponse } from "@/lib/community-api"
-import { createAdminReply, deleteAdminQuestion, deleteAdminReply, getAdminOverview, listAdminQuestions, listAdminReplies, listAdminUsers, moderateAdminQuestion, updateAdminUserStatus, type AdminOverview, type AdminReply } from "@/lib/admin-api"
+import { createAdminReply, deleteAdminQuestion, deleteAdminReply, getAdminOverview, listAdminQuestions, listAdminReplies, listAdminUsers, moderateAdminQuestion, updateAdminUserStatus, type AdminOverview, type AdminReply, type CommunityQuestionResponse } from "@/lib/admin-api"
 
 type View = "users" | "questions" | "replies"
 
